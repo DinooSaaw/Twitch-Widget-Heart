@@ -17,7 +17,7 @@ const canvas = document.getElementById("ecg-canvas");
 const ctx = canvas.getContext("2d");
 
 let heartbeat = 80; // Default BPM
-let history = Array(10).fill(heartbeat);
+let history = []; // Store all heartbeats along with timestamps
 
 // Function to update the heartbeat display
 function updateHeartbeat(value) {
@@ -46,24 +46,26 @@ function updateHeartbeat(value) {
   heart.style.backgroundColor = bgColor;
   heart.style.setProperty("--heart-color", bgColor); // Apply to before/after
 
-  // Save heartbeat history
-  history.push(heartbeat);
-  if (history.length > 10) history.shift();
+  // Save heartbeat history with timestamp
+  history.push({ timestamp: Date.now(), heartbeat });
 
   drawECG();
 }
 
 // Function to draw the ECG graph (scaled based on config min/max)
 function drawECG() {
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  ctx.clearRect(0, 0, canvas.width, canvas.height); // Clear canvas
   ctx.beginPath();
   ctx.strokeStyle = "red";
   ctx.lineWidth = 2;
 
-  // Draw the ECG line
-  for (let i = 0; i < history.length; i++) {
-    const x = (i / history.length) * canvas.width;
-    const y = canvas.height - ((history[i] - config.ECG.min) / (config.ECG.max - config.ECG.min)) * canvas.height; // Scaled based on config min/max
+  // Display only the latest 10 heartbeats
+  const displayHistory = history.slice(-10); // Get the last 10 heartbeats
+  if (displayHistory.length < 2) return; // Skip drawing if less than 2 points
+  // Draw the ECG line using the last 10 heartbeats
+  for (let i = 0; i < displayHistory.length; i++) {
+    const x = (i / displayHistory.length) * canvas.width;
+    const y = canvas.height - ((displayHistory[i].heartbeat - config.ECG.min) / (config.ECG.max - config.ECG.min)) * canvas.height; // Scaled based on config min/max
     if (i === 0) ctx.moveTo(x, y);
     else ctx.lineTo(x, y);
   }
@@ -72,8 +74,8 @@ function drawECG() {
   ctx.stroke();
 
   // Draw a red circle on the latest point
-  const lastX = (history.length - 1) / history.length * canvas.width;
-  const lastY = canvas.height - ((history[history.length - 1] - config.ECG.min) / (config.ECG.max - config.ECG.min)) * canvas.height;
+  const lastX = (displayHistory.length - 1) / displayHistory.length * canvas.width;
+  const lastY = canvas.height - ((displayHistory[displayHistory.length - 1].heartbeat - config.ECG.min) / (config.ECG.max - config.ECG.min)) * canvas.height;
   
   ctx.beginPath();
   ctx.arc(lastX, lastY, 5, 0, Math.PI * 2); // Circle with radius 5
@@ -83,7 +85,7 @@ function drawECG() {
 
 // Function to generate a random heartbeat (80-120 BPM)
 function getRandomHeartbeat() {
-  return Math.floor(Math.random() * (120 - 80 + 1)) + 80;
+  return Math.floor(Math.random() * (200 - 0 + 1)) + 0;
 }
 
 // Test command to simulate a heartbeat change
@@ -94,5 +96,5 @@ window.setFakeHeartbeat = (value) => {
 
 // Update heartbeat every second
 setInterval(() => {
-  setFakeHeartbeat(getRandomHeartbeat());
+  // setFakeHeartbeat(getRandomHeartbeat());
 }, 1000);
