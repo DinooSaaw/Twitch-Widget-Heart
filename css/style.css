@@ -1,0 +1,86 @@
+body {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  color: white;
+  font-family: Arial, sans-serif;
+}
+
+#container {
+  text-align: center;
+}
+
+#heart-box {
+  position: relative;
+  width: 150px;
+  height: 150px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  animation: beat 1s infinite ease-in-out;
+
+}
+
+#heart {
+  position: relative;
+  width: 120px;
+  height: 120px;
+  background-color: red;
+  transform: rotate(-45deg);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#heart:before,
+#heart:after {
+  content: "";
+  position: absolute;
+  width: 120px;
+  height: 120px;
+  background-color: inherit;
+  border-radius: 50%;
+}
+
+#heart:before {
+  top: -60px;
+  left: 0;
+}
+
+#heart:after {
+  left: 60px;
+  top: 0;
+}
+
+#heartbeat-number {
+  z-index: 99;
+  font-family: "First Coffee", sans-serif;
+  position: absolute;
+  font-size: 70px;
+  font-weight: bold;
+  color: rgb(0, 0, 0);
+  transform: rotate(45deg);
+}
+
+/* ECG Canvas */
+#ecg-canvas {
+  display: block;
+  border: 1px solid white;
+  margin-top: 20px;
+  width: 400px;
+  height: 100px;
+}
+
+@keyframes heartbeat {
+  0% {
+    transform: scale(1) rotate(-45deg);
+  }
+  50% {
+    transform: scale(1.1) rotate(-45deg);
+  }
+  100% {
+    transform: scale(1) rotate(-45deg);
+  }
+}

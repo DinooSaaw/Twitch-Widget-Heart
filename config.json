@@ -1,0 +1,7 @@
+{
+  "ECG": {
+    "showECG": true,
+    "min": 0,
+    "max": 200
+  }
+}
