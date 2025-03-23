@@ -32,6 +32,7 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
+  
 }
 
 #heart:before,
@@ -66,6 +67,7 @@ body {
 
 /* ECG Canvas */
 #ecg-canvas {
+  margin-left: -100px;
   display: block;
   border: 1px solid white;
   margin-top: 20px;
